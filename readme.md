@@ -9,7 +9,6 @@ Elmer is a simple and flexible routing library for PHP. A route matches a URI an
 
 ```php
 <?php
-
 require '/path/to/Elmer/Routes.php';
 
 $routes = new Elmer\Routes;
@@ -40,7 +39,6 @@ You can respond to different HTTP methods like this:
 
 ```php
 <?php
-
 $routes->get();
 $routes->post();
 $routes->put();
@@ -51,7 +49,6 @@ You can use any method name you like. The following is valid:
 
 ```php
 <?php
-
 $routes->brew();
 ```
 
@@ -61,7 +58,6 @@ URIs may contain parameters. A parameter starts with a semicolon and is followed
 
 ```php
 <?php
-
 $routes->get('/users/:int', ..);
 ```
 
@@ -71,7 +67,6 @@ The types of parameters that are available are:
 
 ```php
 <?php
-
 :any // Anything (alpha, num, underscore, or dash)
 :int // Any integer
 :alpha // Any alphabetic character
@@ -89,7 +84,6 @@ Parts of a URI can be marked as optional by appending a question mark like so:
 
 ```php
 <?php
-
 $routes->get('/articles/:year?', function($year = 2012) { .. });
 ```
 
@@ -105,7 +99,6 @@ A basic filter looks like this:
 
 ```php
 <?php
-
 $routes->filter(function($env, $route)) {
 	// code that runs before
 	$response = $route();
@@ -123,7 +116,6 @@ As you can see, the filter is responsible for continuing the execution of the ap
 
 ```php
 <?php
-
 $routes->filter(funciton($env, $route)) {
 	if($env['user']->isAdmin()) {
 		return $code();
@@ -149,7 +141,6 @@ To define a group all you need to do is wrap several routes in the following:
 
 ```php
 <?php
-
 $routes->group(function($routes) {
 	
 	// Declare filters here
@@ -163,7 +154,6 @@ You may nest groups if you like. Filters apply to sub-groups, but a filter in a 
 
 ```php
 <?php
-
 $routes->group(function($routes) {
 	$routes->filter(function($env, $route) { .. }); // Filter A
 	$routes->get('/foo', function($env) { .. });
@@ -183,7 +173,6 @@ You can apply a prefix to a group of routes by passing in the URI prefix as the 
 
 ```php
 <?php
-
 $routes->group('/user', function($routes) {
 	// Declare routes here
 }
