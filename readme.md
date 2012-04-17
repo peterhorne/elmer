@@ -23,9 +23,10 @@ Elmer is a simple and flexible routing library for PHP. A route matches a URI an
 	}
 	
 	
-	$routes->dispatch($env);
+	$response = $routes->dispatch($env);
+	$response();
 
-...and that's it! We've initialised the routes registry, added a route that responds to the HTTP request `GET /` with `Hello, world!`, and then called it.
+...and that's it! We've initialised the routes registry, added a route that responds to the HTTP request `GET /`, then called it and displayed the response: `Hello, world!`.
 
 ## Environment
 
