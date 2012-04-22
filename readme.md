@@ -12,26 +12,18 @@ Elmer is a simple and flexible routing library for PHP. A route matches a URI an
 require '/path/to/Elmer/Routes.php';
 
 $routes = new Elmer\Routes;
-$env = array(
-	'request' => new Elmer\Request,
-	'response' => new Elmer\Response,
-);
+$request = new Elmer\Request;
+$response = new Elmer\Response;
 
-
-$routes->get('/', function($env) {
-	return $env['response']->content('Hello, world!');
+$routes->get('/', function() use ($response) {
+	return $response['body'] = 'Hello, world!';
 }
 
-
-$response = $routes->dispatch($env);
+$response = $routes->dispatch($request);
 $response();
 ```
 
 ...and that's it! We've initialised the routes registry, added a route that responds to the HTTP request `GET /`, then called it and displayed the response: `Hello, world!`.
-
-## Environment
-
-You may be wondering what the variable `$env` is for? It contains the application's state and is passed to every route. It can contain anything you like, such as a registry of models, but it *must* contain the request and response objects.
 
 ## Methods
 
