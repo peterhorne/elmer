@@ -43,7 +43,9 @@ URIs may contain parameters. A parameter starts with a semicolon and is followed
 
 ```php
 <?php
-$routes->get('/users/:int', ..);
+$routes->get('/users/:int', function($id) {
+	return "User #: $id";
+});
 ```
 
 This route will match `/users` followed by any digit, eg. `/users/21`.
