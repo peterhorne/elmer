@@ -6,8 +6,9 @@ use Elmer\Response;
 
 require '../vendor/autoload.php';
 $routes = new Routes;
+$request = new Request;
 
-$routes->group(function($routes) {
+$routes->group(function($routes) use ($request) {
 	
 	$routes->filter(function($route) {
 		if (false) {
@@ -17,9 +18,9 @@ $routes->group(function($routes) {
 		return $route();
 	});
 	
-	$routes->get('/', function() {
+	$routes->get('/', function() use ($request) {
 		return new Response('Hello, world');
 	});
 });
 
-$routes->dispatch(new Request)->send();
+$routes->dispatch($request)->send();
