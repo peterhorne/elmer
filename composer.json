@@ -1,0 +1,13 @@
+{
+    "name": "elmer/elmer",
+    "description": "A simple and flexible routing library for PHP",
+    "authors": [
+        {
+            "name": "Peter Horne",
+            "email": "peterhorne92@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": { "Elmer": "src/" }
+    }
+}

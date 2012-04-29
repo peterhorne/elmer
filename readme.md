@@ -9,15 +9,20 @@ Elmer is a simple and flexible routing library for PHP.
 
 ```php
 <?php
+
+use Elmer\Routes;
+use Elmer\Request;
+use Elmer\Response;
+
 require '/path/to/Elmer/Routes.php';
-$routes = new Elmer\Routes;
+$routes = new Routes;
 
 $routes->get('/', function() {
-	return 'Hello, world!';
+	return new Response('Hello, world!');
 }
 
-$response = $routes->dispatch($request);
-$response();
+$response = $routes->dispatch(new Request);
+$response->send();
 ```
 
 ...and that's it! We've created a route that responds to the HTTP request `GET /` with `Hello, world!`.
@@ -44,7 +49,7 @@ URIs may contain parameters. A parameter starts with a semicolon and is followed
 ```php
 <?php
 $routes->get('/users/:int', function($id) {
-	return "User #: $id";
+	return new Response("User #: $id");
 });
 ```
 
@@ -88,17 +93,17 @@ A basic filter looks like this:
 <?php
 $routes->filter(function($route)) {
 	$response = $route();
-	$response['body'] = "Foo{$response['body']}";
+	$response['body'] .= 'Bar';
 	
 	return $response;
 }
 
 $routes->get('/', function() {
-	return 'Bar';
+	return new Response('Foo');
 }
 ```
 
-The filter above prepends 'Foo' to the response so the final result would be `FooBar`. The route is passed to the filter, which is responsible for continuing the execution of the application by calling the route closure. This allows code to be run before/after, modify the response, or skip calling the route altogether.
+The filter above appends 'Bar' to the response so the final result would be `FooBar`. The route is passed to the filter, which is responsible for continuing the execution of the application by calling the route closure. This allows code to be run before/after, modify the response, or skip calling the route altogether.
 
 Filters can be used for a range of tasks, such as authentication or logging, the limit is your imagination!
 
