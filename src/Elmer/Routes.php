@@ -18,13 +18,15 @@ class Routes {
 		$uri = $this->prefix . $uri;
 		
 		foreach ($this->filters as $filter) {
-			$this->routes[$uri][$method] = function() use ($filter, $callback) {
+			$callback = function() use ($filter, $callback) {
 				$args = func_get_args();
 				return $filter(function() use ($callback, $args) {
 					return call_user_func_array($callback, $args);
 				});
 			};
 		}
+		
+		$this->routes[$uri][$method] = $callback;
 	}
 	
 	
