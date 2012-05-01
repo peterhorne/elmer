@@ -17,7 +17,7 @@ class Response {
 	
 	
 	public function send() {
-		header(true, true, $this->status);
+		header("Status: {$this->status}", true, $this->status);
 		
 		foreach ($this->headers as $header => $values) {
 			foreach ((array)$values as $value) {
