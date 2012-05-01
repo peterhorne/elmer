@@ -14,30 +14,16 @@ class Request implements ArrayAccess {
 	
 	public function __construct() {
 		$this->method = $_SERVER['REQUEST_METHOD'];
-		$this->scheme = (!empty($_SERVER['HTTPS']) ? 'https' : 'http');
+		$this->scheme = (empty($_SERVER['HTTPS']) ? 'http' : 'https');
 		$this->host = $_SERVER['SERVER_NAME'];
-		$this->path = $this->path();
-		$this->script = $this->script($_SERVER['REQUEST_URI'], $this->path);
+		$this->script = dirname($_SERVER['SCRIPT_NAME']);
+		$this->path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : (isset($_SERVER['ORIG_PATH_INFO']) ? $_SERVER['ORIG_PATH_INFO'] : '/');
 		$this->params = array_merge($_GET, $_POST);
 	}
 	
 	
-	private function path() {
-		if (isset($_SERVER['PATH_INFO'])) {
-			return $_SERVER['PATH_INFO'];
-		}
-		
-		if (isset($_SERVER['ORIG_PATH_INFO'])) {
-			return $_SERVER['ORIG_PATH_INFO'];
-		}
-		
-		return '/';
-	}
-	
-	
-	private function script($request, $path) {
-		$path = '/'.preg_quote($path, '/').'$/';
-		return preg_replace($path, '', $request);
+	public function base() {
+		return $this->scheme . '://' . $this->host . $this->script;
 	}
 	
 	
