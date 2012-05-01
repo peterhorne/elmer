@@ -19,8 +19,10 @@ class Response {
 	public function send() {
 		header(true, true, $this->status);
 		
-		foreach ($this->headers as $header) {
-			header("{$header[0]}: {$header[1]}");
+		foreach ($this->headers as $header => $values) {
+			foreach ((array)$values as $value) {
+				header("$header: $value");
+			}
 		}
 		
 		echo $this->body;
