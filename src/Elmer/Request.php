@@ -23,8 +23,15 @@ class Request implements ArrayAccess {
 	
 	
 	private function path() {
-		$regex = '/^' . preg_quote($_SERVER['SCRIPT_NAME'], '/') . '/';
-		return preg_replace($regex, '', $_SERVER['PHP_SELF']);
+		if (isset($_SERVER['PATH_INFO'])) {
+			return $_SERVER['PATH_INFO'];
+		}
+		
+		if (isset($_SERVER['ORIG_PATH_INFO'])) {
+			return $_SERVER['ORIG_PATH_INFO'];
+		}
+		
+		return '/';
 	}
 	
 	
