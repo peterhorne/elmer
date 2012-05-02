@@ -27,6 +27,8 @@ class Routes {
 		}
 		
 		$this->routes[$uri][$method] = $callback;
+		
+		return $this;
 	}
 	
 	
@@ -50,6 +52,7 @@ class Routes {
 	
 	public function filter($filter) {
 		$this->filters[] = $filter;
+		return $this;
 	}
 	
 	
@@ -65,6 +68,8 @@ class Routes {
 		$this->prefix .= $prefix;
 		$group($this);
 		$this->prefix = $previous;
+		
+		return $this;
 	}
 	
 	
