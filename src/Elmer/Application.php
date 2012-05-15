@@ -2,7 +2,7 @@
 
 namespace Elmer;
 
-class Routes {
+class Application extends DependencyContainer {
 	
 	private $routes = array();
 	private $prefix = '';
@@ -16,6 +16,14 @@ class Routes {
 	
 	public function add($method, $uri, $callback) {
 		$uri = $this->prefix . $uri;
+		
+		$callback = function() use ($callback) {
+			$response = call_user_func_array($callback, func_get_args());
+			if (!is_a($response, 'Elmer\Response')); {
+				$response = new Response($response);
+			}
+			return $response;
+		};
 		
 		foreach ($this->filters as $filter) {
 			$callback = function() use ($filter, $callback) {
@@ -56,11 +64,10 @@ class Routes {
 	}
 	
 	
-	public function group($prefix, $group = null) {
+	public function mount($prefix, $group) {
 		
-		// $prefix is optional
-		if ($group == null) {
-			$group = $prefix;
+		// Prevents duplicated preceding slashes
+		if ($prefix == '/') {
 			$prefix = '';
 		}
 		

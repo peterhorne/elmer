@@ -12,13 +12,22 @@ class Request implements ArrayAccess {
 	
 	private $params;
 	
-	public function __construct() {
-		$this->method = $_SERVER['REQUEST_METHOD'];
-		$this->scheme = (empty($_SERVER['HTTPS']) ? 'http' : 'https');
-		$this->host = $_SERVER['SERVER_NAME'];
-		$this->script = dirname($_SERVER['SCRIPT_NAME']);
-		$this->path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : (isset($_SERVER['ORIG_PATH_INFO']) ? $_SERVER['ORIG_PATH_INFO'] : '/');
-		$this->params = array_merge($_GET, $_POST);
+	public function __construct($properties = null) {
+		$properties = $properties ?: $this->getPropertiesFromGlobals();
+		foreach($properties as $property => $value) {
+			$this->$property = $value;
+		}
+	}
+	
+	private function getPropertiesFromGlobals() {
+		return array(
+			'method' => $_SERVER['REQUEST_METHOD'],
+			'scheme' => (empty($_SERVER['HTTPS']) ? 'http' : 'https'),
+			'host' => $_SERVER['SERVER_NAME'],
+			'script' => dirname($_SERVER['SCRIPT_NAME']),
+			'path' => isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : (isset($_SERVER['ORIG_PATH_INFO']) ? $_SERVER['ORIG_PATH_INFO'] : '/'),
+			'params' => array_merge($_GET, $_POST),
+		);
 	}
 	
 	

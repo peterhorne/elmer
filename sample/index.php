@@ -1,26 +1,26 @@
 <?php
 
-use Elmer\Routes;
+use Elmer\Application;
 use Elmer\Request;
 use Elmer\Response;
 
 require '../vendor/autoload.php';
-$routes = new Routes;
-$request = new Request;
+$app = new Application;
 
-$routes->group(function($routes) use ($request) {
+$app->mount('/', function($app) {
 	
-	$routes->filter(function($route) {
-		if (false) {
-			return new Response('Route not called.');
+	$app->filter(function($route) {
+		if (true) {
+			return $route();
+		} else {
+			return 'Route not called.';
 		}
-		
-		return $route();
 	});
 	
-	$routes->get('/', function() use ($request) {
-		return new Response('Hello, world');
+	$app->get('/', function() {
+		return 'Hello, world';
 	});
 });
 
-$routes->dispatch($request)->send();
+header('X-Powered-By: Elmer', true);
+$app->dispatch(new Request)->send();
