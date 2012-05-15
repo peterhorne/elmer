@@ -109,4 +109,14 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 		$response = $app->dispatch($request);
 		$this->assertInstanceOf('Elmer\Response', $response);
 	}
+	
+	
+	public function testApplicationIsPassedIntoARoute() {
+		
+	}
+	
+	
+	public function testApplicationIsPassedIntoAFilter() {
+		
+	}
 }

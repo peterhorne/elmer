@@ -3,103 +3,109 @@
 > Weniger, aber besser
 > &mdash; <cite>Dieter Rams</cite>
 
-Elmer is a simple and flexible routing library for PHP.
+Elmer is a simple and flexible web routing framework for PHP.
 
 ## Getting Started
 
 ```php
 <?php
 
-use Elmer\Routes;
+use Elmer\Application;
 use Elmer\Request;
 use Elmer\Response;
 
-require '/path/to/Elmer/Routes.php';
-$routes = new Routes;
+require '../vendor/autoload.php';
+$app = new Application;
 
-$routes->get('/', function() {
-	return new Response('Hello, world!');
-}
+$app->get('/', function() {
+	return 'Hello, world';
+});
 
-$response = $routes->dispatch(new Request);
+$response = $app->dispatch(new Request);
 $response->send();
 ```
 
-...and that's it! We've created a route that responds to the HTTP request `GET /` with `Hello, world!`.
+This is all it takes to create an application that says 'Hello, world' when a user navigates their browser to the root of your site.
 
 ## Methods
 
-A route can respond to different HTTP methods:
+We assigned a new route to our application by calling the `get` method on our application instance. The method refers to the HTTP method and we can respond to any HTTP method by changing the method that we call on our application:
 
 ```php
 <?php
-$routes->get();
-$routes->post();
-$routes->put();
-$routes->delete();
-
-// You can use any method you like:
-$routes->brew();
+$app->post();
+$app->delete();
+$$app->brew(); // Custom methods are supported
 ```
 
 ## Route Parameters
 
-URIs may contain parameters. A parameter starts with a semicolon and is followed by the type of parameter. For example:
+URIs may contain parameters. A parameter starts with a semicolon and is followed by the type of parameter:
 
 ```php
 <?php
-$routes->get('/users/:int', function($id) {
-	return new Response("User #: $id");
+$app->get('/users/:int', function($app, $id) {
+	return "You are user #$id";
 });
 ```
 
 This route will match `/users` followed by any digit, eg. `/users/21`.
 
-The types of parameters that are available are:
+You may use the following parameters:
 
 ```php
-<?php
 :any // Anything (alpha, num, underscore, or dash)
 :int // Any integer
 :alpha // Any alphabetic character
 :alphanum // Any alphanumeric character
 :year // 4 digits
-:month // 2 digits
-:day // 2 digits
+:month // 1 - 12
+:day // 1 - 31
 ```
 
-If you need more control then you can use a custom regex (wrapped in parenthesis to define it as a matched section). The ability to add custom parameter types at runtime is planned for the near future.
-
-### Optional Parameters
-
-Parts of a URI can be marked as optional by appending a question mark like so:
+You can add custom parameters by modifying the `patterns` property of your application instance like so:
 
 ```php
 <?php
-$routes->get('/articles/:year?', function($year = 2012) { .. });
+$app->patterns['names'] = '(peter|simon|john)';
+```
+
+You may also write your own custom regex inline. Be sure to wrap it in parenthesis so it is counted as a matched section.
+
+### Optional Parameters
+
+Parts of a URI can be marked as optional by appending a question mark:
+
+```php
+<?php
+$app->get('/articles/:year?', function($app, $year = 2012) { .. });
 ```
 
 This route will match the request `/articles`, as well as `/articles/2011`.
 
 Don't forget to set a default value for optional parameters!
 
+## Responses
+
+TODO
+
 ## Filters
 
-Filters enable you to add additional functionality to your applications, such as logging and authentication.
+Filters 'wrap' around routes so that you can add additional functionality to your application, such as logging and authentication.
 
-A basic filter looks like this:
+A filter looks like this:
 
 ```php
 <?php
-$routes->filter(function($route)) {
+$app->filter(function($app, $route)) {
 	$response = $route();
 	$response['body'] .= 'Bar';
 	
 	return $response;
 }
 
-$routes->get('/', function() {
-	return new Response('Foo');
+$app->get('/', function() {
+	return 'Foo';
 }
 ```
 
@@ -119,7 +125,7 @@ Groups enable you to apply a filter to a limited subset of routes. To define a g
 
 ```php
 <?php
-$routes->group(function($routes) {
+$app->group(function($app) {
 	
 	// Declare filters here
 	// Declare routes here
@@ -132,13 +138,13 @@ You may nest groups if you like. Filters apply to sub-groups, but a filter in a 
 
 ```php
 <?php
-$routes->group(function($routes) {
-	$routes->filter(function($route) { .. }); // Filter A
-	$routes->get('/foo', function() { .. });
+$app->group(function($app) {
+	$app->filter(function($route) { .. }); // Filter A
+	$app->get('/foo', function() { .. });
 	
-	$routes->group(function($routes) {
-		$routes->filter($route) { .. }); // Filter B
-		$routes->get('/bar', function() { .. });
+	$app->group(function($app) {
+		$app->filter($route) { .. }); // Filter B
+		$app->get('/bar', function() { .. });
 	});
 });
 ```
@@ -151,8 +157,8 @@ You can apply a prefix to a group of routes by passing in the URI prefix as the 
 
 ```php
 <?php
-$routes->group('/user', function($routes) {
-	$routes->get('/profile', function() { .. });
+$app->group('/user', function($app) {
+	$app->get('/profile', function() { .. });
 }
 ```
 

@@ -22,5 +22,4 @@ $app->mount('/', function($app) {
 	});
 });
 
-header('X-Powered-By: Elmer', true);
 $app->dispatch(new Request)->send();
