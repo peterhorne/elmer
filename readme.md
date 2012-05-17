@@ -35,7 +35,7 @@ We assigned a new route to our application by calling the `get` method on our ap
 <?php
 $app->post();
 $app->delete();
-$$app->brew(); // Custom methods are supported
+$app->brew(); // Custom methods are supported
 ```
 
 ## Route Parameters
