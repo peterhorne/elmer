@@ -41,6 +41,11 @@ class Application extends DependencyContainer {
 	
 	
 	public function dispatch(Request $request) {
+		// Add $request to $app['request']
+		$this['request'] = function() use ($request) {
+			return $request;
+		};
+		
 		foreach ($this->routes as $uri => $methods) {
 			$uri = $this->regexify($uri);
 			
