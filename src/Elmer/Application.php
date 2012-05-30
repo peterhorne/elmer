@@ -64,7 +64,7 @@ class Application extends DependencyContainer {
 	
 	
 	public function filter($filter) {
-		$this->filters[] = $filter;
+		array_unshift($this->filters, $filter);
 		return $this;
 	}
 	
