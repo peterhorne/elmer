@@ -76,10 +76,14 @@ class Application extends DependencyContainer {
 			$prefix = '';
 		}
 		
-		$previous = $this->prefix;
+		$previous = array(
+			'prefix' => $this->prefix,
+			'filters' => $this->filters
+		);
 		$this->prefix .= $prefix;
 		$group($this);
-		$this->prefix = $previous;
+		$this->prefix = $previous['prefix'];
+		$this->filters = $previous['filters'];
 		
 		return $this;
 	}
