@@ -1,7 +1,6 @@
 #Elmer
 
-> Weniger, aber besser
-> &mdash; <cite>Dieter Rams</cite>
+> Weniger, aber besser &mdash; Dieter Rams
 
 Elmer is a simple and flexible web routing framework for PHP.
 
