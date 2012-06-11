@@ -41,6 +41,11 @@ class Application extends DependencyContainer {
 	
 	
 	public function dispatch(Request $request) {
+		// Add $request to $app['request']
+		$this['request'] = function() use ($request) {
+			return $request;
+		};
+		
 		foreach ($this->routes as $uri => $methods) {
 			$uri = $this->regexify($uri);
 			
@@ -59,7 +64,7 @@ class Application extends DependencyContainer {
 	
 	
 	public function filter($filter) {
-		$this->filters[] = $filter;
+		array_unshift($this->filters, $filter);
 		return $this;
 	}
 	
@@ -71,10 +76,14 @@ class Application extends DependencyContainer {
 			$prefix = '';
 		}
 		
-		$previous = $this->prefix;
+		$previous = array(
+			'prefix' => $this->prefix,
+			'filters' => $this->filters
+		);
 		$this->prefix .= $prefix;
 		$group($this);
-		$this->prefix = $previous;
+		$this->prefix = $previous['prefix'];
+		$this->filters = $previous['filters'];
 		
 		return $this;
 	}
