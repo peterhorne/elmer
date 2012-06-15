@@ -89,6 +89,11 @@ class Application extends DependencyContainer {
 	}
 	
 	
+	public function run() {
+		$this->dispatch(new Request)->send();
+	}
+	
+	
 	public function __call($name, $args) {
 		array_unshift($args, $name);
 		call_user_func_array(array($this, 'add'), $args);
