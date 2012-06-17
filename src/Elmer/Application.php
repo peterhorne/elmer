@@ -9,8 +9,8 @@ class Application extends DependencyContainer {
 	private $filters = array();
 	
 	public $patterns = array(
-		'int' => '(\d+)',
-		'any' => '(\w+)'
+		':int' => '(\d+)',
+		':any' => '(\w+)'
 	);
 	
 	
@@ -101,15 +101,10 @@ class Application extends DependencyContainer {
 	
 	
 	private function regexify($uri) {
-		$parts = explode('/', $uri);
-		foreach ($parts as &$part) {
-			// if part begins with ':'
-			if (substr($part, 0, 1) == ':') {
-				// replace $part with corresponding regex
-				$part = $this->patterns[substr($part, 1)];
-			}
+		foreach ($this->patterns as $pattern => $replacement) {
+			$uri = str_replace($pattern, $replacement, $uri);
 		}
 		
-		return '/^' . implode('\/', $parts) . '$/';
+		return '/^' . preg_replace('/\//', '\/', $uri) . '$/';
 	}
 }

@@ -119,4 +119,28 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 	public function testApplicationIsPassedIntoAFilter() {
 		
 	}
+	
+	
+	public function testRoutesWithMultipleSlashes() {
+		$app = new Application;
+		
+		$callback = $this->getMock('stdClass', array('__invoke'));
+		$callback->expects($this->once())->method('__invoke');
+		
+		$app->add('get', '/test/route', $callback);
+		
+		$request = new Request(array(
+			'method' => 'get',
+			'path' => '/test/route',
+			'scheme' => 'http',
+			'host' => 'localhost',
+			'script' => '/',
+			'params' => array(),
+		));
+		
+		$app->dispatch($request);
+		
+		$request['path'] = '/test//route'; // Extra slashes in URL
+		$app->dispatch($request);
+	}
 }
