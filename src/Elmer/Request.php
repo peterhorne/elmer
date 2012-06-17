@@ -40,6 +40,11 @@ class Request implements ArrayAccess {
 	}
 	
 	
+	public function url() {
+		return $this->base() . $this->path;
+	}
+	
+	
 	public function offsetGet($offset) {
 		return isset($this->params[$offset]) ? $this->params[$offset] : null;
 	}
