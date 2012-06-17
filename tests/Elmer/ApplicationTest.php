@@ -140,7 +140,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 		
 		$app->dispatch($request);
 		
-		$request['path'] = '/test//route'; // Extra slashes in URL
+		$request->path = '/test//route'; // Extra slashes in URL
 		$app->dispatch($request);
 	}
 }

@@ -28,7 +28,10 @@ class Request implements ArrayAccess {
 		$this->scheme = empty($_SERVER['HTTPS']) ? 'http' : 'https';
 		$this->host = $_SERVER['SERVER_NAME'];
 		$this->script = dirname($_SERVER['SCRIPT_NAME']);
-		$this->path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : (isset($_SERVER['ORIG_PATH_INFO']) ? $_SERVER['ORIG_PATH_INFO'] : '/');
+		
+		$filename = basename($_SERVER['SCRIPT_FILENAME']);
+		$prefix = str_replace($filename, '', $_SERVER['SCRIPT_NAME']);
+		$this->path = '/' . str_replace($prefix, '', $_SERVER['REQUEST_URI']);
 	}
 	
 	
