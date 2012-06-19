@@ -10,9 +10,6 @@ Elmer is a simple and flexible web routing framework for PHP.
 <?php
 
 use Elmer\Application;
-use Elmer\Request;
-use Elmer\Response;
-
 require '../vendor/autoload.php';
 $app = new Application;
 
@@ -20,8 +17,7 @@ $app->get('/', function() {
 	return 'Hello, world';
 });
 
-$response = $app->dispatch(new Request);
-$response->send();
+$app->run();
 ```
 
 This is all it takes to create an application that says 'Hello, world' when a user navigates their browser to the root of your site.
