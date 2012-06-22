@@ -31,7 +31,8 @@ class Request implements ArrayAccess {
 		
 		$filename = basename($_SERVER['SCRIPT_FILENAME']);
 		$prefix = str_replace($filename, '', $_SERVER['SCRIPT_NAME']);
-		$this->path = '/' . str_replace($prefix, '', $_SERVER['REQUEST_URI']);
+		$parts = parse_url($_SERVER['REQUEST_URI']);
+		$this->path = '/' . str_replace($prefix, '', $parts['path']);
 	}
 	
 	
