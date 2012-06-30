@@ -1,28 +1,22 @@
 <?php
 
 namespace Elmer;
-use ArrayAccess;
 
-class Request implements ArrayAccess {
-	public $path;
-	public $method;
-	public $script;
-	public $host;
-	public $scheme;
+class Environment extends DependencyContainer {
 	
-	private $params;
-	
-	public function __construct($defaults = null) {
-		if (!$defaults) {
-			$this->setPropertiesFromGlobals();
-		} else {
-			foreach($defaults as $default => $value) {
-				$this->$default = $value;
-			}
-		}
+	public function __construct($request_method, $script_name, $path_info, $server_name, $server_port, $input) {
+		$this['REQUEST_METHOD'] = $request_method;
+		$this['SCRIPT_NAME'] = $script_name;
+		$this['PATH_INFO'] = $path_info;
+		$this['SERVER_NAME'] = $server_name;
+		$this['SERVER_PORT'] = $server_port;
+		$this['input'] = $input;
+		
+		$this['BASE'] = array($this, 'base')
 	}
 	
-	private function setPropertiesFromGlobals() {
+	public static function initFromGlobals() {
+		
 		$this->params = array_merge($_GET, $_POST);
 		$this->method = $this['_method'] ?: $_SERVER['REQUEST_METHOD'];
 		$this->scheme = empty($_SERVER['HTTPS']) ? 'http' : 'https';

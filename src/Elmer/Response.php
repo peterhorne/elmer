@@ -35,6 +35,17 @@ class Response extends ArrayObject {
 	}
 	
 	
+	public static function convertReturnValueToResponse($callback) {
+		return function() use ($callback) {
+			$response = call_user_func_array($callback, func_get_args());
+			if (!is_a($response, 'Elmer\Response')); {
+				$response = new Response($response);
+			}
+			return $response;
+		};
+	}
+	
+	
 	public function offsetGet($index) {
 		if ($index === 0 || $index === 'status') {
 			return $this->status;
