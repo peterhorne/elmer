@@ -6,7 +6,7 @@ class Routes {
 	
 	private $routes = array();
 	private $prefix = '';
-	private $filters = array();
+	private $decorators = array();
 	
 	public $patterns = array(
 		':int' => '(\d+)',
@@ -32,22 +32,22 @@ class Routes {
 	public function add($method, $uri, $callback) {
 		$uri = $this->prefix . $uri;
 		
-		foreach ($this->filters as $filter) {
-			// Replace route callback with proxy to the filter
-			$callback = function() use ($filter, $callback) {
+		foreach ($this->decorators as $decorator) {
+			// Replace route callback with proxy to the decorator
+			$callback = function() use ($decorator, $callback) {
 				
 				// Get the args that are passed to the route callback
 				$args = func_get_args();
 				
-				// Create the route callback proxy that is passed to the filter
+				// Create the route callback proxy that is passed to the decorator
 				// We create a proxy so we don't have to manually pass in any arguments
 				$callback = function() use ($callback, $args) {
 					return call_user_func_array($callback, $args);
 				};
 				
-				// Add the route callback proxy to the args for the filter
+				// Add the route callback proxy to the args for the decorator
 				array_unshift($args, $callback);
-				return call_user_func_array($filter, $args);
+				return call_user_func_array($decorator, $args);
 			};
 		}
 		
@@ -57,8 +57,8 @@ class Routes {
 	}
 	
 	
-	public function filter($filter) {
-		array_unshift($this->filters, $filter);
+	public function decorator($decorator) {
+		array_unshift($this->decorators, $decorator);
 		return $this;
 	}
 	
@@ -73,12 +73,12 @@ class Routes {
 		
 		$previous = array(
 			'prefix' => $this->prefix,
-			'filters' => $this->filters
+			'decorators' => $this->decorators
 		);
 		$this->prefix .= $prefix;
 		$routes($this);
 		$this->prefix = $previous['prefix'];
-		$this->filters = $previous['filters'];
+		$this->decorators = $previous['decorators'];
 		
 		return $this;
 	}
