@@ -15,7 +15,7 @@ class DependencyContainer extends \ArrayObject {
 	public function offsetGet($key) {
 		$dependency = $this->dependencies[$key];
 		if (is_callable($dependency)) {
-			return $dependency($this);
+			return call_user_func($dependency, $this);
 		} else {
 			return $dependency;
 		}

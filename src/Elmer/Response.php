@@ -10,15 +10,10 @@ class Response extends ArrayObject {
 	public $headers = array('X-Powered-By' => 'Elmer');
 	
 	
-	public function __construct() {
-		$args = func_get_args();
-		
-		// Allow calling with an array
-		if (func_num_args() === 1 && is_array($args[0])) {
-			$args = $args[0];
-		}
-		
-		call_user_func_array(array($this, 'populate'), $args);
+	public function __construct($status = 200, $body = '', $headers = array()) {
+		$this->status = $status;
+		$this->body = $body;
+		$this->headers = array_merge($this->headers, $headers);
 	}
 	
 	
@@ -35,45 +30,32 @@ class Response extends ArrayObject {
 	}
 	
 	
-	public static function convertReturnValueToResponse($callback) {
-		return function() use ($callback) {
-			$response = call_user_func_array($callback, func_get_args());
-			if (!is_a($response, 'Elmer\Response')); {
-				$response = new Response($response);
-			}
-			return $response;
-		};
-	}
-	
-	
-	public function offsetGet($index) {
-		if ($index === 0 || $index === 'status') {
+	public function offsetGet($key) {
+		if ($key === 0 || $key === 'status') {
 			return $this->status;
 		}
 		
-		if ($index === 1 || $index === 'body') {
+		if ($key === 1 || $key === 'body') {
 			return $this->body;
 		}
 		
-		if ($index === 2 || $index === 'headers') {
+		if ($key === 2 || $key === 'headers') {
 			return $this->headers;
 		}
 	}
 	
 	
-	private function populate() {
-		foreach (func_get_args() as $arg) {
-			switch(gettype($arg)) {
-				case 'integer':
-					$this->status = $arg;
-					break;
-				case 'string':
-					$this->body = $arg;
-					break;
-				case 'array':
-					$this->headers = array_merge($this->headers, $arg);
-					break;
-			}
+	public function offsetSet($key, $value) {
+		if ($key === 0 || $key === 'status') {
+			return $this->status = $value;
+		}
+		
+		if ($key === 1 || $key === 'body') {
+			return $this->body = $value;
+		}
+		
+		if ($key === 2 || $key === 'headers') {
+			return $this->headers = $value;
 		}
 	}
 }

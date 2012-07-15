@@ -4,12 +4,11 @@ use Elmer\DependencyContainer;
 
 class DependencyContainerTest extends PHPUnit_Framework_TestCase {
 	
-	public function testConfig() {
-		$container = new DependencyContainer(
-			array('author' => 'Peter Horne')
-		);
+	public function testGetVariable() {
+		$container = new DependencyContainer;
+		$container['foo'] = 'bar';
 		
-		$this->assertEquals('Peter Horne', $container['config']['author']);
+		$this->assertEquals('bar', $container['foo']);
 	}
 	
 	
