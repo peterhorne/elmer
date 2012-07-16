@@ -1,5 +1,7 @@
 #Elmer
 
+[![Build Status](https://secure.travis-ci.org/peterhorne/elmer.png)](http://travis-ci.org/peterhorne/elmer)
+
 > Weniger, aber besser &mdash; Dieter Rams
 
 Elmer is a simple and flexible web routing framework for PHP.
