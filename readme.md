@@ -1,6 +1,4 @@
-#Elmer
-
-[![Build Status](https://secure.travis-ci.org/peterhorne/elmer.png)](http://travis-ci.org/peterhorne/elmer)
+#Elmer [![Build Status](https://secure.travis-ci.org/peterhorne/elmer.png)](http://travis-ci.org/peterhorne/elmer)
 
 > Weniger, aber besser &mdash; Dieter Rams
 
@@ -11,14 +9,21 @@ Elmer is a simple and flexible web routing framework for PHP.
 ```php
 <?php
 
-require '../vendor/autoload.php';
-$app = new Elmer\Application;
+use Elmer\Environment;
+use Elmer\Response;
+use Elmer\Routes;
 
-$app->get('/', function() {
-	return 'Hello, world';
+require '../vendor/autoload.php';
+
+$app = new Routes(function($app) {
+	$app->get('/', function($env) {
+		return new Response(200, 'Hello, world!');
+	}
 });
 
-$app->run();
+$response = $app(Environment::initFromGlobals());
+$response->send();
+
 ```
 
 This is all it takes to create an application that says 'Hello, world' when a user navigates their browser to the root of your site.
